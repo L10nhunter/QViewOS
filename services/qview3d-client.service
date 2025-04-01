@@ -1,0 +1,15 @@
+[Unit]
+Description=QView3D Client Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/run-qview3d-client.sh
+Type=simple
+Nice=-15
+Restart=always
+User=root
+StandardOutput=append:/var/log/qview3d-client.log
+StandardError=append:/var/log/qview3d-client.log
+
+[Install]
+WantedBy=multi-user.target

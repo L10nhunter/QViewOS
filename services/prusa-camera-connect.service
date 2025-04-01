@@ -1,0 +1,16 @@
+[Unit]
+Description=Prusa Connect Camera Service
+After=network.target systemd-udev-trigger.service
+Wants=network.target
+Requires=systemd-udev-trigger.service
+
+[Service]
+Type=simple
+Nice=-19
+EnvironmentFile=/home/dietpi/src/prusa-connect-camera-script/.env
+ExecStart=/home/dietpi/src/prusa-connect-camera-script/prusa-connect-camera.sh
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target
