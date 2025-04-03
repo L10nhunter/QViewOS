@@ -326,22 +326,23 @@ install_python() {
 
     # use curl to download the python tarball
     echo "Downloading Python $PYTHON_VERSION..."
-    if ! curl -sS "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz" -o ~/Downloads/Python-$PYTHON_VERSION.tgz; then
+    mkdir -p "$PYTHON_DOWNLOAD_DIR"
+    if ! wget  "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz" -P "$PYTHON_DOWNLOAD_DIR"; then
         echo "Failed to download Python $PYTHON_VERSION"
         exit 1
     fi
 
     # Define the path to the Python tarball
-    local PYTHON_TARBALL=~/Downloads/Python-$PYTHON_VERSION.tgz
+    local PYTHON_TARBALL="$PYTHON_DOWNLOAD_DIR/Python-$PYTHON_VERSION.tgz"
 
     if [[ -z "$PYTHON_TARBALL" ]]; then
-        echo "No Python tarball found in ~/Downloads"
+        echo "No Python tarball found in $PYTHON_DOWNLOAD_DIR"
         exit 1
     fi
 
     # Extract the tarball
     echo "Extracting..."
-    tar -zxvf "$PYTHON_TARBALL" -C ~/Downloads
+    tar -zxvf "$PYTHON_TARBALL" -C "$PYTHON_DOWNLOAD_DIR"
 
     # Get the extracted folder name
     PYTHON_SRC_DIR=$(tar -tf "$PYTHON_TARBALL" | head -1 | cut -d '/' -f1)
@@ -351,7 +352,7 @@ install_python() {
         exit 1
     fi
 
-    cd ~/Downloads/"$PYTHON_SRC_DIR"
+    cd "$PYTHON_DOWNLOAD_DIR"
 
     # Configure, make, and install
     echo "Configuring..."
@@ -397,6 +398,11 @@ install_python() {
     # Upgrade pip
     echo "Upgrading pip..."
     sudo "$PYTHON_BIN" -m pip install --upgrade pip
+
+    # cleanup
+    echo "Cleaning up..."
+    make distclean
+    rm -rf "$PYTHON_DOWNLOAD_DIR"
 
     if [[ ${MISSING[*]} -ne 0 ]]; then
         echo "Python installation complete!"
