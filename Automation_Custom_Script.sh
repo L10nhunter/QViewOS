@@ -3,19 +3,8 @@
 set -e # Exit on any error
 # set -x  # Debug mode for visibility
 
-# Define repository URLs
-CAM_REPO_URL="https://github.com/nvtkaszpir/prusa-connect-camera-script.git"
-SERVICES_REPO_URL="https://github.com/L10nhunter/QViewOS.git"
-
 # Define directories
 BASE_DIR="/home/dietpi/src"
-CAM_DIR="$BASE_DIR/prusa-connect-camera-script"
-SERVICES_REPO_DIR="$BASE_DIR/services-repo"
-SERVICES_DIR="$SERVICES_REPO_DIR/services"
-SCRIPTS_DIR="$SERVICES_REPO_DIR/scripts"
-SYSTEMD_DIR="/etc/systemd/system"
-BIN_DIR="/usr/local/bin"
-ENV_FILE="$CAM_DIR/.env"
 
 # function to install apt packages
 install_apt_packages() {
@@ -61,6 +50,8 @@ collect_printer_details() {
         echo "User cancelled input"
         exit 1
     }
+
+    local ENV_FILE="$CAM_DIR/.env"
 
     echo "Collecting printer and camera details..."
 
@@ -166,6 +157,12 @@ collect_printer_details() {
 
 # function to install and start services
 services() {
+    local SERVICES_REPO_DIR="$BASE_DIR/services-repo"
+    local SERVICES_DIR="$SERVICES_REPO_DIR/services"
+    local SCRIPTS_DIR="$SERVICES_REPO_DIR/scripts"
+    local SYSTEMD_DIR="/etc/systemd/system"
+    local SERVICES_REPO_URL="https://github.com/L10nhunter/QViewOS.git"
+    local BIN_DIR="/usr/local/bin"
     # Clone services repository
     if [[ ! -d "$SERVICES_REPO_DIR" ]]; then
         echo "Cloning services and scripts repository..."
@@ -219,6 +216,7 @@ services() {
 install_python() {
     local PYTHON_VERSION=3.12.9
     local PYTHON_SRC_DIR
+    local PYTHON_DOWNLOAD_DIR="/tmp/python"
     echo "Starting Python installation..."
 
     # Function to check if a package is installed (for Debian-based distros)
