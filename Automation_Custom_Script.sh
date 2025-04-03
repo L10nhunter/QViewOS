@@ -284,42 +284,45 @@ install_python() {
         dpkg -l | grep -qw "$1" || return 1
     }
 
+    check_list() {
+        MISSING_PACKAGES=()
+        local pkg; local REQUIRED_PACKAGES=("$@")
+        for pkg in "${REQUIRED_PACKAGES[@]}"; do
+            if ! check_package "$pkg"; then
+                MISSING_PACKAGES+=("$pkg")
+            fi
+        done
+        if [[ ${#MISSING_PACKAGES[@]} -ne 0 ]]; then
+            return 1
+        fi
+        return 0
+    }
+
     # List of required packages
     local REQUIRED_PACKAGES=(
         build-essential
+        wget
         curl
         gcc
         make
+        zlib1g-dev
+        libnss3-dev
+        libssl-dev
+        libreadline-dev
         libffi-dev
         libsqlite3-dev
-        libssl-dev
-        libbz2-dev
-        liblzma-dev
-        libreadline-dev
-        libncursesw5-dev
-        python3-gdbm
-        python3-gdbm-dbg
-        zlib1g-dev
-        tk-dev
         libuuid1
         libexpat1-dev
     )
 
     # Install missing dependencies
     echo "Checking for required dependencies..."
-    local MISSING_PACKAGES=()
-    for pkg in "${REQUIRED_PACKAGES[@]}"; do
-        if ! check_package "$pkg"; then
-            MISSING_PACKAGES+=("$pkg")
-        fi
-    done
-
-    if [[ ${#MISSING_PACKAGES[@]} -ne 0 ]]; then
+    local MISSING_PACKAGES=(); local pkg
+    while ! check_list "${REQUIRED_PACKAGES[@]}"; do
         echo "Installing missing packages: ${MISSING_PACKAGES[*]}"
         sudo apt update && sudo apt install -y "${MISSING_PACKAGES[@]}"
-    else
-        echo "All required dependencies are installed."
-    fi
+    done
+    echo "All required dependencies are installed."
 
     # use curl to download the python tarball
     echo "Downloading Python $PYTHON_VERSION..."
@@ -374,7 +377,7 @@ install_python() {
     # Check for essential Python modules
     echo "Checking for built-in modules..."
 
-    local MODULES=("ctypes" "sqlite3" "ssl" "bz2" "lzma" "readline" "curses" "zlib" "tkinter" "uuid" "xml")
+    local MODULES=("ctypes" "sqlite3" "ssl" "readline" "uuid" "xml")
     local MISSING=()
     local mod
 
