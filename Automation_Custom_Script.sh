@@ -78,20 +78,20 @@ collect_printer_details() {
     local PRUSA_CONNECT_CAMERA_TOKEN="check-Prusa-Connect-Token" 													# Default value
     local CAMERA_COMMAND="rpicam-still"                          													# Default value
     local EXTRA_PARAMS='--immediate --nopreview --mode 4608:2592 --lores-width 0 --lores-height 0 --thumb none -o'	# Default value
-    local PADDING=2
+    local PADDING=24
     local CHOICE; local MENU_WIDTH; local MENU_HEIGHT; local o1; local o2; local o3; local o4
 
     # Collect inputs using Whiptail
     while true; do
         # calculate the width of the longest menu item
-        MENU_WIDTH=$(max $((${#EXTRA_PARAMS} + 14 + PADDING)) $((${#CAMERA_COMMAND} + 16 + PADDING)) $((${#PRINTER_ADDRESS} + 17 + PADDING)) $((${#PRUSA_CONNECT_CAMERA_TOKEN} + 14 + PADDING)))
+        MENU_WIDTH=$(max $((${#EXTRA_PARAMS} + PADDING)) $((${#CAMERA_COMMAND} + PADDING)) $((${#PRINTER_ADDRESS} + PADDING)) $((${#PRUSA_CONNECT_CAMERA_TOKEN} + PADDING)))
         MENU_HEIGHT=$(tput lines)
         # Show the menu
         CHOICE=$(whiptail --title "Printer & Camera Setup" --notags --ok-button "Select Option" --menu "Select an option to edit, then choose 'Submit and Continue' to finish." "$(min 20 "$MENU_HEIGHT")" "$MENU_WIDTH" 5 \
-            "1" "Printer Address: $PRINTER_ADDRESS" \
-            "2" "Camera Token: $PRUSA_CONNECT_CAMERA_TOKEN" \
-            "3" "Camera Command: $CAMERA_COMMAND" \
-            "4" "Extra Params: $EXTRA_PARAMS" \
+            "1" "Printer Address     : $PRINTER_ADDRESS" \
+            "2" "Camera Token        : $PRUSA_CONNECT_CAMERA_TOKEN" \
+            "3" "Camera Command      : $CAMERA_COMMAND" \
+            "4" "Extra Params        : $EXTRA_PARAMS" \
             "5" "Submit and Continue" \
             3>&1 1>&2 2>&3) || user_cancel
 
