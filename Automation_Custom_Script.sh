@@ -266,6 +266,10 @@ services() {
         sudo systemctl enable "$SERVICE.service"
         sudo systemctl start "$SERVICE.service"
     done
+
+    # cleanup
+    echo "Cleaning up..."
+    sudo rm -rf "$SERVICES_REPO_DIR"
 }
 
 # function to install python 3.12.9
