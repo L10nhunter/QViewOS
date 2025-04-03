@@ -66,7 +66,7 @@ collect_printer_details() {
 
     # Check if .env file already exists
     if [[ -f "$ENV_FILE" ]]; then
-        if whiptail --yesno --title "Error: .env already exists!!!" ".env file already exists. Do you want to remove it and rerun the script?" "$(min 10 "$MENU_HEIGHT")" "$(min 60 "$MENU_WIDTH")"; then
+        if whiptail --yesno --title "Error: .env already exists!!!" ".env file already exists. Do you want to remove it and rerun the script?" "$(min 10 "$MENU_HEIGHT")" "$(min 60 "$MENU_WIDTH")" 3>&1 1>&2 2>&3; then
             rm "$ENV_FILE"
         else
             echo "Exiting script."
@@ -74,10 +74,10 @@ collect_printer_details() {
         fi
     fi
     # Prompt for printer and camera details
-    local PRINTER_ADDRESS="192.168.0.100"                        # Default value
-    local PRUSA_CONNECT_CAMERA_TOKEN="check-Prusa-Connect-Token" # Default value
-    local CAMERA_COMMAND="rpicam-still"                          # Default value
-    local EXTRA_PARAMS='--immediate --nopreview --mode 4608:2592 --lores-width 0 --lores-height 0 --thumb none -o'
+    local PRINTER_ADDRESS="192.168.0.100"                        													# Default value
+    local PRUSA_CONNECT_CAMERA_TOKEN="check-Prusa-Connect-Token" 													# Default value
+    local CAMERA_COMMAND="rpicam-still"                          													# Default value
+    local EXTRA_PARAMS='--immediate --nopreview --mode 4608:2592 --lores-width 0 --lores-height 0 --thumb none -o'	# Default value
     local PADDING=2
     local CHOICE; local MENU_WIDTH; local MENU_HEIGHT; local o1; local o2; local o3; local o4
 
@@ -87,7 +87,7 @@ collect_printer_details() {
         MENU_WIDTH=$(max $((${#EXTRA_PARAMS} + 14 + PADDING)) $((${#CAMERA_COMMAND} + 16 + PADDING)) $((${#PRINTER_ADDRESS} + 17 + PADDING)) $((${#PRUSA_CONNECT_CAMERA_TOKEN} + 14 + PADDING)))
         MENU_HEIGHT=$(tput lines)
         # Show the menu
-        CHOICE=$(whiptail --title "Printer & Camera Setup" --notags --ok-button "Select Option" --menu "Select an option to edit, then choose 'Submit and Continue' to finish." 20 "$MENU_WIDTH" 5 \
+        CHOICE=$(whiptail --title "Printer & Camera Setup" --notags --ok-button "Select Option" --menu "Select an option to edit, then choose 'Submit and Continue' to finish." "$(min 20 "$MENU_HEIGHT")" "$MENU_WIDTH" 5 \
             "1" "Printer Address: $PRINTER_ADDRESS" \
             "2" "Camera Token: $PRUSA_CONNECT_CAMERA_TOKEN" \
             "3" "Camera Command: $CAMERA_COMMAND" \
