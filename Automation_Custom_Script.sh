@@ -14,12 +14,17 @@ install_apt_packages() {
         "git"
         "uuid"
     )
-
+    local package
     echo "Installing required packages..."
     sudo apt update
     for package in "${packages[@]}"; do
         if ! dpkg -l | grep -q "$package"; then
-            sudo apt install -y "$package"
+            if ! sudo apt install -y "$package"; then
+                echo "$package installed"
+            else
+                echo "$package failed to install!"
+                exit 1
+            fi
         else
             echo "$package is already installed."
         fi
