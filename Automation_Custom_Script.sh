@@ -31,6 +31,23 @@ install_apt_packages() {
     done
 }
 
+# function to install prusa-connect-camera-script
+camera_repo_download() {
+    local CAM_DIR="$BASE_DIR/prusa-connect-camera-script"
+    local CAM_REPO_URL="https://github.com/nvtkaszpir/prusa-connect-camera-script.git"
+
+    # Clone camera repository
+    if [[ ! -d "$CAM_DIR" ]]; then
+        echo "Cloning camera repository..."
+        git clone "$CAM_REPO_URL" "$CAM_DIR"
+    else
+        echo "Camera repository already exists, pulling latest changes..."
+        cd "$CAM_DIR"
+        git pull
+    fi
+
+}
+
 # Function to collect printer and camera details using Whiptail
 collect_printer_details() {
     max() {
@@ -352,18 +369,11 @@ install_python() {
 # Ensure base directory exists
 mkdir -p "$BASE_DIR"
 
-# Clone camera repository
-if [[ ! -d "$CAM_DIR" ]]; then
-    echo "Cloning camera repository..."
-    git clone "$CAM_REPO_URL" "$CAM_DIR"
-else
-    echo "Camera repository already exists, pulling latest changes..."
-    cd "$CAM_DIR"
-    git pull
-fi
-
 # Install required apt packages
 install_apt_packages
+
+# Download camera repository
+camera_repo_download
 
 # Collect printer details
 collect_printer_details
