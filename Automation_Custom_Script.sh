@@ -356,7 +356,7 @@ install_python() {
 
     # Configure, make, and install
     echo "Configuring..."
-    ./configure --enable-optimizations
+    ./configure --enable-optimizations --disable-test-modules
 
     echo "Building (this may take some time)..."
     make "-j$(nproc)" # Uses all available cores
