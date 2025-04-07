@@ -23,7 +23,7 @@ for_all_scripts() {
 # download services from repo with wget
 download_service() {
     echo "Downloading $1...";
-    if ! wget "$SERVICES_URL/$1.service" -O "$SYSTEMD_DIR/$1.service"; then
+    if ! wget "$SERVICES_URL/$1.service" -O "$SYSTEMD_DIR/$1.service" -q --show-progress --progress=bar:force:noscroll 2>&1; then
         echo "Failed to download $1";
         exit 1;
     fi
@@ -46,7 +46,7 @@ add_service_to_dietpi_services() {
 
 # download bash scripts from repo with wget
 download_script() {
-    if ! sudo wget "$SCRIPTS_URL/$1" -O "$BIN_DIR/$1.sh"; then
+    if ! sudo wget "$SCRIPTS_URL/$1" -O "$BIN_DIR/$1.sh" -q --show-progress --progress=bar:force:noscroll 2>&1; then
         echo "Failed to download $1";
         exit 1;
     fi
