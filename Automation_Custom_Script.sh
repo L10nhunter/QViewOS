@@ -330,6 +330,7 @@ install_python() {
         done
     }
 
+    # Check if Python 3.12.9 is already installed
     if [[ "$(python3.12 --version 2>&1)" == "Python $PYTHON_VERSION" ]]; then
         PYTHON_BIN=$(which python3.12)
         echo "Python $PYTHON_VERSION is already installed."
@@ -341,7 +342,6 @@ install_python() {
     fi
 
     echo "Starting Python installation..."
-
 
     # List of required packages
     local REQUIRED_PACKAGES=(
@@ -436,7 +436,7 @@ install_python() {
     if [[ ${MISSING[*]} -ne 0 ]]; then
         echo "Python installation complete!"
     else
-        echo "Python installation complete, with missing packages: ${MISSING[*]}"
+        echo "Python installation complete, with missing packages: ${MISSING[*]}. These should not be required."
     fi
     "$PYTHON_BIN" --version
     "$PYTHON_BIN" -m pip --version
