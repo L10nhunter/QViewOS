@@ -316,7 +316,7 @@ install_python() {
     # Function to check for built-in modules
     check_modules() {
         echo "Checking for built-in modules..."
-        local MODULES=("ctypes" "sqlite3" "ssl" "readline" "uuid" "xml")
+        local MODULES=("ctypes" "sqlite3" "gzip" "ssl" "readline" "uuid" "xml")
         local MISSING=()
         local mod
 
@@ -433,13 +433,18 @@ install_python() {
     make distclean
     rm -rf "$PYTHON_DOWNLOAD_DIR"
 
+    "$PYTHON_BIN" --version
+    pip --version
+
     if [[ ${MISSING[*]} -eq 0 ]]; then
         echo "Python installation complete!"
     else
-        echo "Python installation complete, with missing packages: ${MISSING[*]}. These should not be required."
+        if [[ "${MISSING[*]}" =~ "ctypes" || "${MISSING[*]}" =~ "sqlite3" || "${MISSING[*]}" =~ "gzip" ]]; then
+            echo "Python installation complete, but missing modules: ${MISSING[*]}. At least some of these are required for QView3D to work."
+        else
+            echo "Python installation complete, with missing packages: ${MISSING[*]}. These should not be required."
+        fi
     fi
-    "$PYTHON_BIN" --version
-    "$PYTHON_BIN" -m pip --version
 }
 
 # function to run everything with failures
