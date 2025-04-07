@@ -390,7 +390,7 @@ install_python() {
     tar -zxvf "$PYTHON_TARBALL" -C "$PYTHON_DOWNLOAD_DIR"
 
     # Get the extracted folder name
-    PYTHON_SRC_DIR="$PYTHON_DOWNLOAD_DIR/python3.12"
+    PYTHON_SRC_DIR="$PYTHON_DOWNLOAD_DIR/Python-3.12.9"
 
     if [[ -z "$PYTHON_SRC_DIR" ]]; then
         echo "Failed to determine extracted folder name."
