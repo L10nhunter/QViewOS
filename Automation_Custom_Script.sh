@@ -302,7 +302,6 @@ install_python() {
     local REQUIRED_PACKAGES=(
         build-essential
         wget
-        curl
         gcc
         make
         zlib1g-dev
@@ -324,10 +323,11 @@ install_python() {
     done
     echo "All required dependencies are installed."
 
-    # use curl to download the python tarball
+    # use wget to download the python tarball
     echo "Downloading Python $PYTHON_VERSION..."
     mkdir -p "$PYTHON_DOWNLOAD_DIR"
-    if ! wget  "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz" -P "$PYTHON_DOWNLOAD_DIR"; then
+    if ! wget  "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz" -P "$PYTHON_DOWNLOAD_DIR"; \
+     then
         echo "Failed to download Python $PYTHON_VERSION"
         exit 1
     fi
