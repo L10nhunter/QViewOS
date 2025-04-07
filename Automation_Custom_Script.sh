@@ -413,22 +413,41 @@ install_python() {
     "$PYTHON_BIN" -m pip --version
 }
 
+# function to run everything with failures
+run_with_failures() {
+    local RETRIES=${2-3}
+    local COUNT=0
+    while [[ $COUNT -lt $RETRIES ]]; do
+        if [[ $COUNT -gt 0 ]]; then
+            echo "$1 failed. Retry attempt ($((COUNT+1))/$RETRIES)"
+        fi
+        if "$@" && return 0; then
+            echo "$1 completed successfully."
+            return 0
+        else
+            ((COUNT++))
+        fi
+    done
+    echo "$1 failed after $RETRIES attempts."
+    exit 1
+}
+
 # Ensure base directory exists
 mkdir -p "$BASE_DIR"
 
 # Install required apt packages
-install_apt_packages
+run_with_failures install_apt_packages
 
 # Download camera repository
-camera_repo_download
+run_with_failures camera_repo_download
 
 # Collect printer details
-collect_printer_details
+run_with_failures collect_printer_details
 
 # install python3.12.9 and pip, then install requirements
-install_python
+run_with_failures install_python
 
 # start services
-services
+run_with_failures services
 
 echo "Auto-start setup completed successfully."
