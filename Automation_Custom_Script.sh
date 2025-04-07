@@ -330,14 +330,32 @@ install_python() {
         done
     }
 
+    # Function to check if Python is installed
+    python_install_check() {
+        local VERB=${1-"installed"}
+        # Verify installation
+        if ! $(which python${PYTHON_VERSION%.*}) --version 2>&1 | grep -q "Python $PYTHON_VERSION"; then
+            return 1
+        fi
+
+        PYTHON_BIN=$(which python${PYTHON_VERSION%.*})
+
+        if [[ "/usr/local/bin/python3\.12" != "$PYTHON_BIN" ]]; then
+            echo "Python $VERB in an unexpected location, but found at $PYTHON_BIN"
+        else
+            echo "Python $VERB at: $PYTHON_BIN"
+        fi
+
+        # Check for essential Python modules
+        check_modules
+        # Install and upgrade pip
+        install_pip
+    }
+
     # Check if Python is already installed
-    if [[ "$(python${PYTHON_VERSION%.*} --version 2>&1)" == "Python $PYTHON_VERSION" ]]; then
+    if python_install_check found; then
         PYTHON_BIN=$(which python${PYTHON_VERSION%.*})
         echo "Python $PYTHON_VERSION is already installed."
-        # Check if pip is installed and upgrade it
-        install_pip
-        # Check if modules are installed
-        check_modules
         return 0
     fi
 
@@ -409,24 +427,11 @@ install_python() {
     echo "Installing..."
     sudo make install
 
-    # Verify installation
-    PYTHON_BIN=$(which python${PYTHON_VERSION%.*})
-    if [[ -z "$PYTHON_BIN" ]]; then
+    # Check if Python was installed successfully
+    if ! python_install_check installed; then
         echo "Python installation failed."
         exit 1
     fi
-
-    if [[ "/usr/local/bin/python3\.12" != "$PYTHON_BIN" ]]; then
-        echo "Python installed in an unexpected location, but found at $PYTHON_BIN"
-    else
-        echo "Python installed at: $PYTHON_BIN"
-    fi
-
-    # Check for essential Python modules
-    check_modules
-
-    # Install and upgrade pip
-    install_pip
 
     # cleanup
     echo "Cleaning up..."
