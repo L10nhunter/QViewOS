@@ -23,16 +23,16 @@ for_all_scripts() {
 # download services from repo with wget
 download_service() {
     echo "Downloading $1...";
-    if ! wget "$SERVICES_URL/$1.service" -O "$SYSTEMD_DIR/"; then
+    if ! wget "$SERVICES_URL/$1.service" -O "$SYSTEMD_DIR/$1.service"; then
         echo "Failed to download $1";
         exit 1;
     fi
 }
 
 enable_and_start_service() {
-    local SERVICE="$1"
-    sudo systemctl enable "$SERVICE.service"
-    sudo systemctl start "$SERVICE.service"
+    local SERVICE="$1.service"
+    sudo systemctl enable "$SERVICE"
+    sudo systemctl start "$SERVICE"
 }
 
 add_service_to_dietpi_services() {
@@ -46,11 +46,11 @@ add_service_to_dietpi_services() {
 
 # download bash scripts from repo with wget
 download_script() {
-    if ! sudo wget "$SCRIPTS_URL/$1" -O "$BIN_DIR/"; then
+    if ! sudo wget "$SCRIPTS_URL/$1" -O "$BIN_DIR/$1.sh"; then
         echo "Failed to download $1";
         exit 1;
     fi
-    if ! sudo chmod 754 "$BIN_DIR/$1"; then
+    if ! sudo chmod 754 "$BIN_DIR/$1.sh"; then
         echo "Failed to set permissions for $1";
         exit 1;
     fi
