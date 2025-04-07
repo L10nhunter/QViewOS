@@ -330,6 +330,16 @@ install_python() {
         done
     }
 
+    if [[ "$(python3.12 --version 2>&1)" == "Python $PYTHON_VERSION" ]]; then
+        PYTHON_BIN=$(which python3.12)
+        echo "Python $PYTHON_VERSION is already installed."
+        # Check if pip is installed and upgrade it
+        install_pip
+        # Check if modules are installed
+        check_modules
+        return 0
+    fi
+
     echo "Starting Python installation..."
 
 
