@@ -272,7 +272,7 @@ services() {
     sudo rm -rf "$SERVICES_REPO_DIR"
 }
 
-# function to install python 3.12.9
+# function to install QView3D required version of python
 install_python() {
     local PYTHON_VERSION=3.12.9
     local PYTHON_SRC_DIR
@@ -330,9 +330,9 @@ install_python() {
         done
     }
 
-    # Check if Python 3.12.9 is already installed
-    if [[ "$(python3.12 --version 2>&1)" == "Python $PYTHON_VERSION" ]]; then
-        PYTHON_BIN=$(which python3.12)
+    # Check if Python is already installed
+    if [[ "$(python${PYTHON_VERSION%.*} --version 2>&1)" == "Python $PYTHON_VERSION" ]]; then
+        PYTHON_BIN=$(which python${PYTHON_VERSION%.*})
         echo "Python $PYTHON_VERSION is already installed."
         # Check if pip is installed and upgrade it
         install_pip
@@ -390,7 +390,7 @@ install_python() {
     tar -zxvf "$PYTHON_TARBALL" -C "$PYTHON_DOWNLOAD_DIR"
 
     # Get the extracted folder name
-    PYTHON_SRC_DIR="$PYTHON_DOWNLOAD_DIR/Python-3.12.9"
+    PYTHON_SRC_DIR="$PYTHON_DOWNLOAD_DIR/Python-$PYTHON_VERSION"
 
     if [[ -z "$PYTHON_SRC_DIR" ]]; then
         echo "Failed to determine extracted folder name."
@@ -410,7 +410,7 @@ install_python() {
     sudo make install
 
     # Verify installation
-    PYTHON_BIN=$(which python3.12)
+    PYTHON_BIN=$(which python${PYTHON_VERSION%.*})
     if [[ -z "$PYTHON_BIN" ]]; then
         echo "Python installation failed."
         exit 1
@@ -484,7 +484,7 @@ run_with_failures camera_repo_download
 # Collect printer details
 run_with_failures collect_printer_details
 
-# install python3.12.9 and pip, then install requirements
+# install python and pip, then install requirements
 run_with_failures install_python
 
 # start services
