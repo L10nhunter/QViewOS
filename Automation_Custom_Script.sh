@@ -433,7 +433,7 @@ install_python() {
     make distclean
     rm -rf "$PYTHON_DOWNLOAD_DIR"
 
-    if [[ ${MISSING[*]} -ne 0 ]]; then
+    if [[ ${MISSING[*]} -eq 0 ]]; then
         echo "Python installation complete!"
     else
         echo "Python installation complete, with missing packages: ${MISSING[*]}. These should not be required."
