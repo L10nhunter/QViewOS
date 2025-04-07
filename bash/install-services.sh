@@ -45,11 +45,11 @@ add_service_to_dietpi_services() {
 
 # download bash scripts from repo with wget
 download_script() {
-    if ! sudo wget "$SCRIPTS_URL/$1" -O "$BIN_DIR/$1.sh" -q --show-progress --progress=bar:force:noscroll 2>&1; then
+    if ! sudo wget "$SCRIPTS_URL/$1" -O "$BIN_DIR/$1" -q --show-progress --progress=bar:force:noscroll 2>&1; then
         echo "Failed to download $1";
         exit 1;
     fi
-    if ! sudo chmod 754 "$BIN_DIR/$1.sh"; then
+    if ! sudo chmod 754 "$BIN_DIR/$1"; then
         echo "Failed to set permissions for $1";
         exit 1;
     fi
