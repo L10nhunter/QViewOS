@@ -3,17 +3,15 @@
 
 # Define paths
 PROJECT_DIR="$HOME/Desktop/QView3D"
-VENV_DIR="$PROJECT_DIR/.venv"
 SERVER_DIR="$PROJECT_DIR/server"
+VENV_DIR="$SERVER_DIR/.python-venv"
 DEPENDENCIES_FILE="$SERVER_DIR/dependencies.txt"
 
 # Check if virtual environment exists, create if necessary
 if [[ ! -d "$VENV_DIR" ]]; then
     echo "Virtual environment not found. Creating one in $VENV_DIR..."
-    python3 -m venv "$VENV_DIR"
-
     # Ensure venv was created successfully
-    if [[ $? -ne 0 ]]; then
+    if ! python3 -m venv "$VENV_DIR"; then
         echo "Failed to create virtual environment." >&2
         exit 1
     fi
