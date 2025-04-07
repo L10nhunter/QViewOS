@@ -390,7 +390,7 @@ install_python() {
     tar -zxvf "$PYTHON_TARBALL" -C "$PYTHON_DOWNLOAD_DIR"
 
     # Get the extracted folder name
-    PYTHON_SRC_DIR=$(tar -tf "$PYTHON_TARBALL" | head -1 | cut -d '/' -f1)
+    PYTHON_SRC_DIR="$PYTHON_DOWNLOAD_DIR/python3.12"
 
     if [[ -z "$PYTHON_SRC_DIR" ]]; then
         echo "Failed to determine extracted folder name."
@@ -410,15 +410,17 @@ install_python() {
     sudo make install
 
     # Verify installation
-    local PYTHON_BIN
-    PYTHON_BIN=$(find /usr/local/bin -type f -name 'python[0-9]*.[0-9]*' | grep -E 'python3\.12\.9' | tail -n 1)
-
+    PYTHON_BIN=$(which python3.12)
     if [[ -z "$PYTHON_BIN" ]]; then
         echo "Python installation failed."
         exit 1
     fi
 
-    echo "Python installed at: $PYTHON_BIN"
+    if [[ "/usr/local/bin/python3\.12" != "$PYTHON_BIN" ]]; then
+        echo "Python installed in an unexpected location, but found at $PYTHON_BIN"
+    else
+        echo "Python installed at: $PYTHON_BIN"
+    fi
 
     # Check for essential Python modules
     check_modules
