@@ -38,10 +38,10 @@ enable_and_start_service() {
 add_service_to_dietpi_services() {
     local SERVICE="$1"
     # Check if the service is already in dietpi-services
-    if grep -q "$SERVICE" "/boot/dietpi/dietpi-services_include_exclude"; then
+    if grep -q "$SERVICE" "/boot/dietpi/.dietpi-services_include_exclude"; then
         return
     fi
-    { echo "+ $SERVICE"; } >>"/boot/dietpi/dietpi-services_include_exclude"
+    { echo "+ $SERVICE"; } >>"/boot/dietpi/.dietpi-services_include_exclude"
 }
 
 # download bash scripts from repo with wget
