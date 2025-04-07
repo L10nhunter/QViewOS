@@ -9,7 +9,7 @@ NVM_DIR="$HOME/.config/nvm"
 # Function to install NVM
 install_nvm() {
     echo "NVM not found. Installing..."
-    curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+    bash -s < <(wget https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh -q --show-progress --progress=bar:force:noscroll)
     export NVM_DIR="$HOME/.config/nvm"
     source "$NVM_DIR/nvm.sh"
 }
