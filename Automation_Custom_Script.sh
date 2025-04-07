@@ -277,13 +277,28 @@ install_python() {
     local PYTHON_VERSION=3.12.9
     local PYTHON_SRC_DIR
     local PYTHON_DOWNLOAD_DIR="/tmp/python"
-    echo "Starting Python installation..."
+    local PYTHON_BIN
+
+    # function to install pip if not installed
+    install_pip() {
+        if "$PYTHON_BIN" -v pip &>/dev/null; then
+            echo "pip is already installed."
+        else
+            echo "pip is not installed. Installing pip..."
+            wget https://bootstrap.pypa.io/get-pip.py | sudo "$PYTHON_BIN"
+        fi
+        # Upgrade pip
+        echo "Upgrading pip..."
+        sudo "$PYTHON_BIN" -m pip install --upgrade pip
+        return 0
+    }
 
     # Function to check if a package is installed (for Debian-based distros)
     check_package() {
         dpkg -l | grep -qw "$1" || return 1
     }
 
+    # Function to check if a list of packages are installed
     check_list() {
         MISSING_PACKAGES=()
         local pkg; local REQUIRED_PACKAGES=("$@")
@@ -297,6 +312,26 @@ install_python() {
         fi
         return 0
     }
+
+    # Function to check for built-in modules
+    check_modules() {
+        echo "Checking for built-in modules..."
+        local MODULES=("ctypes" "sqlite3" "ssl" "readline" "uuid" "xml")
+        local MISSING=()
+        local mod
+
+        for mod in "${MODULES[@]}"; do
+            if ! "$PYTHON_BIN" -c "import $mod" 2>/dev/null; then
+                MISSING+=("$mod")
+                echo "Error: Python is missing the $mod module."
+            else
+                echo "$mod module is available!"
+            fi
+        done
+    }
+
+    echo "Starting Python installation..."
+
 
     # List of required packages
     local REQUIRED_PACKAGES=(
@@ -376,28 +411,10 @@ install_python() {
     echo "Python installed at: $PYTHON_BIN"
 
     # Check for essential Python modules
-    echo "Checking for built-in modules..."
+    check_modules
 
-    local MODULES=("ctypes" "sqlite3" "ssl" "readline" "uuid" "xml")
-    local MISSING=()
-    local mod
-
-    for mod in "${MODULES[@]}"; do
-        if ! "$PYTHON_BIN" -c "import $mod" 2>/dev/null; then
-            MISSING+=("$mod")
-            echo "Error: Python is missing the $mod module."
-        else
-            echo "$mod module is available!"
-        fi
-    done
-
-    # Install pip
-    echo "Installing pip..."
-    curl -sS https://bootstrap.pypa.io/get-pip.py | sudo "$PYTHON_BIN"
-
-    # Upgrade pip
-    echo "Upgrading pip..."
-    sudo "$PYTHON_BIN" -m pip install --upgrade pip
+    # Install and upgrade pip
+    install_pip
 
     # cleanup
     echo "Cleaning up..."
