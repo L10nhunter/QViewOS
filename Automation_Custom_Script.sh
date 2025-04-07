@@ -397,7 +397,7 @@ install_python() {
         exit 1
     fi
 
-    cd "$PYTHON_DOWNLOAD_DIR"
+    cd "$PYTHON_SRC_DIR"
 
     # Configure, make, and install
     echo "Configuring..."
