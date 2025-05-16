@@ -61,15 +61,15 @@ for package in "${packages[@]}"; do
 done
 
 # Download camera repository
-run_with_failures "$(bash -s -- "$CAM_DIR" < <(wget -qO - https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/camera-repo-download.sh))"
+run_with_failures "$(bash -s -- "$CAM_DIR" < <(wget -qO- https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/camera-repo-download.sh))"
 
 # Collect printer details
-run_with_failures "$(bash -s -- "$CAM_DIR" < <(wget -qO - https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/collect-printer-details.sh))"
+run_with_failures "$(bash -s -- "$CAM_DIR" < <(wget -qO- https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/collect-printer-details.sh))"
 
 # install python and pip, then install requirements
-run_with_failures "$(bash -s < <(wget -qO - https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/install-python.sh))"
+run_with_failures "$(bash -s < <(wget -qO- https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/install-python.sh))"
 
 # start services
-run_with_failures "$(bash -s < <(wget -qO - https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/install-services.sh))"
+run_with_failures "$(bash -s < <(wget -qO- https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/install-services.sh))"
 
 echo "Auto-start setup completed successfully."
