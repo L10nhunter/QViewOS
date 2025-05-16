@@ -44,7 +44,7 @@ fi
 mkdir -p "$BASE_DIR"
 
 # Install required apt packages
-packages=("rpicam-apps" "whiptail" "git" "uuid")
+packages=("wget" "rpicam-apps" "whiptail" "git" "uuid")
 echo "Installing required packages..."
 sudo apt update
 for package in "${packages[@]}"; do
