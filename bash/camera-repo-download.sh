@@ -1,6 +1,6 @@
 #!/bin/bash
-
-CAM_DIR="${$HOME/prusa-connect-camera-script}"
+BASE_DIR="/home/dietpi/src"
+CAM_DIR="${$BASE_DIR/prusa-connect-camera-script}"
 CAM_REPO_URL="https://github.com/nvtkaszpir/prusa-connect-camera-script.git"
 
 # Clone camera repository
