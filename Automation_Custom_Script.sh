@@ -9,14 +9,14 @@ CAM_DIR="$BASE_DIR/prusa-connect-camera-script"
 
 # function to run everything with failures
 run_with_failures() {
-    local RETRIES=${2-3}
+    local RETRIES=${2:-3}
     local COUNT=0
     local RESULT
     while [[ $COUNT -lt $RETRIES ]]; do
         if [[ $COUNT -gt 0 ]]; then
             echo "$1 failed. Retry attempt ($((COUNT + 1))/$RETRIES)"
         fi
-        "$@"
+        wget -qO- -- $CAM_DIR $1 | bash -s
         RESULT=$?
         if [[ $RESULT -eq 0 ]]; then
             echo "$1 completed successfully."
@@ -61,15 +61,15 @@ for package in "${packages[@]}"; do
 done
 
 # Download camera repository
-run_with_failures "$(bash -s -- "$CAM_DIR" < <(wget -qO- https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/camera-repo-download.sh))"
+run_with_failures https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/camera-repo-download.sh
 
 # Collect printer details
-run_with_failures "$(bash -s -- "$CAM_DIR" < <(wget -qO- https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/collect-printer-details.sh))"
+run_with_failures https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/collect-printer-details.sh
 
 # install python and pip, then install requirements
-run_with_failures "$(bash -s < <(wget -qO- https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/install-python.sh))"
+run_with_failures https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/install-python.sh
 
 # start services
-run_with_failures "$(bash -s < <(wget -qO- https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/install-services.sh))"
+run_with_failures https://raw.githubusercontent.com/L10nhunter/QViewOS/main/bash/install-services.sh
 
 echo "Auto-start setup completed successfully."
