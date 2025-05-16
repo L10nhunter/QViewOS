@@ -16,7 +16,7 @@ run_with_failures() {
         if [[ $COUNT -gt 0 ]]; then
             echo "$1 failed. Retry attempt ($((COUNT + 1))/$RETRIES)"
         fi
-        wget -qO- -- $CAM_DIR $1 | bash -s
+        wget -qO- $1 | bash -s -- $CAM_DIR
         RESULT=$?
         if [[ $RESULT -eq 0 ]]; then
             echo "$1 completed successfully."
