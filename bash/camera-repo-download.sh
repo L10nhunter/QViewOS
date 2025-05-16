@@ -1,14 +1,14 @@
 #!/bin/bash
-BASE_DIR="/home/dietpi/src"
-CAM_DIR="${BASE_DIR}/prusa-connect-camera-script"
+echo $CAM_DIR
+INSTALL_DIR="${CAM_DIR}/prusa-connect-camera-script"
 CAM_REPO_URL="https://github.com/nvtkaszpir/prusa-connect-camera-script.git"
 
 # Clone camera repository
-if [[ ! -d "$CAM_DIR" ]]; then
+if [[ ! -d "$INSTALL_DIR" ]]; then
     echo "Cloning camera repository..."
-    git clone "$CAM_REPO_URL" "$CAM_DIR"
+    git clone "$CAM_REPO_URL" "$INSTALL_DIR"
 else
     echo "Camera repository already exists, pulling latest changes..."
-    cd "$CAM_DIR" || exit 1
+    cd "$INSTALL_DIR" || exit 1
     git pull
 fi
