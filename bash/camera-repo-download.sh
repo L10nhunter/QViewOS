@@ -7,8 +7,11 @@ CAM_REPO_URL="https://github.com/nvtkaszpir/prusa-connect-camera-script.git"
 if [[ ! -d "$INSTALL_DIR" ]]; then
     echo "Cloning camera repository..."
     git clone "$CAM_REPO_URL" "$INSTALL_DIR"
+    echo "Repo Cloned."
 else
     echo "Camera repository already exists, pulling latest changes..."
     cd "$INSTALL_DIR" || exit 1
     git pull
+    echo "Repo Updated."
 fi
+exit 0
