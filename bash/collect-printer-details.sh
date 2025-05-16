@@ -24,7 +24,7 @@ user_cancel() {
     exit 1
 }
 
-ENV_FILE="$CAM_DIR/.env"
+ENV_FILE="${CAM_DIR}/.env"
 
 echo "Collecting printer and camera details..."
 
